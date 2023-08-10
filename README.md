@@ -1,0 +1,2 @@
+# TGAC
+TwitchGrabberAndChecker
