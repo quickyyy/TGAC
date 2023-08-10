@@ -20,7 +20,7 @@ def main():
     config = configparser.ConfigParser()
     config.read('config.ini')
 
-    source_option = input("Select an option:\n1. Parse from folders\n2. Specify a directory with Tokens.txt\nChoice: ")
+    source_option = input("Select an option:\n1. Parse from folders\n2. Specify a directory with tokens.txt\nChoice: ")
 
     if source_option == '1':
         directory = input('Enter the results of blt checker directory (If not specified, the script directory will be checked): ')
