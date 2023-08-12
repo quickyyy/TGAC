@@ -17,7 +17,6 @@ checkedtokens = 0
 config = configparser.ConfigParser()
 config.read('config.ini')
 lang = config.get("Lang", 'lang')
-#Ладно смотри: тут мейн функция, тут происходит все и разом
 def main():
     os.system('cls')
     print("Welcome to TGAC!\n Developer - https://zelenka.guru/quka/ Github - https://github.com/quickyyy/TGAC")
@@ -52,18 +51,13 @@ def main():
 
             chunks = [lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)]
 
-            # Split lines among threads evenly
-            #chunk_size = len(lines) // num_threads
-            #chunks = [lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)]
 
             futures = []
             for chunk in chunks:
                 future = executor.submit(process_tokens_chunk, chunk)
                 futures.append(future)
 
-            # Wait for all threads to finish
             concurrent.futures.wait(futures)
-            #print("The job is done! Report: ")
 def mainRu():
     os.system('cls')
     print("Добро пожаловать в TGAC!\n Разработчик - https://zelenka.guru/quka/ Github - https://github.com/quickyyy/TGAC")
@@ -99,25 +93,17 @@ def mainRu():
 
             chunks = [lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)]
 
-            # Split lines among threads evenly
-            #chunk_size = len(lines) // num_threads
-            #chunks = [lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)]
 
             futures = []
             for chunk in chunks:
                 future = executor.submit(process_tokens_chunk, chunk)
                 futures.append(future)
 
-            # Wait for all threads to finish
             concurrent.futures.wait(futures)
-            #print("The job is done! Report: ")
 def process_tokens_chunk(chunk):
-    goodfunctoken = 0
-    badfunctoken = 0
-    dupedfunctoken = 0
     config = configparser.ConfigParser()
     config.read('config.ini')
-    output_directory = config.get('Paths', 'output_directory')
+    
     output_file = config.get('Paths', 'output_file')
     output_file_bad = config.get('Paths', 'output_file_bad')
 
@@ -129,11 +115,8 @@ def process_tokens_chunk(chunk):
             token = token.decode('utf-8')
             if token in processed_tokens:
                 if config.get('Logs', 'show_warnings').lower() == 'true':
-                    #log_warning(f"Token is duplicated! {token}")
                     global dupedtokens
                     dupedtokens += 1
-                    #global checkedtokens
-                    #checkedtokens += 1
                     reroll_info_good(f"Checked", token, processed_tokens)
                     continue
 
@@ -142,23 +125,16 @@ def process_tokens_chunk(chunk):
 
             result = check_token(token)
             if result == 'good':
-                #log_info(f"Good token {Fore.GREEN}{token}{Style.RESET_ALL} Total: {Fore.GREEN}{goodfunctoken}{Style.RESET_ALL} {Fore.RED}{badfunctoken}{Style.RESET_ALL} {Fore.YELLOW}{dupedfunctoken}{Style.RESET_ALL}")
-                #log_info(f"Good token: {token} {reroll_info_good(token=token)}")
                 reroll_info_good(f"Checked", token, processed_tokens)
                 global goodtokens
                 goodtokens += 1
-                #global checkedtokens
-                #checkedtokens += 1
                 processed_tokens.append(token)
                 outfile.write(f'{token}\n')
                 outfile.flush()
             else:
-                #log_error(f"Bad token! {Fore.RED}{token}{Style.RESET_ALL}")
                 reroll_info_good(f"Checked", token, processed_tokens)
                 global badtokens
                 badtokens += 1
-                #global checkedtokens
-                #checkedtokens += 1
                 badfile.write(f'{token}\n')
                 badfile.flush()
 
@@ -169,7 +145,6 @@ def process_tokens_chunk(chunk):
 
 #Оформление
 def the_end(message, token, processed_tokens): 
-    #P.s. Допиши эту функцию, ей тут одиноко
     #Тут нужен только визуал
     print('Затычка обновления, чтобы не было ерроров при запуске')
     #
@@ -201,7 +176,6 @@ def log_error(message):
 
 
 
-#чекаем токены
 def check_token(token):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -228,7 +202,6 @@ def process_response(response):
     return result
 
 
-#Запускаем скрипт
 if __name__ == "__main__":
     outfile = None
     badfile = None
